@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NeetCode 150 | Pro Practice</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-gradient: radial-gradient(circle at top right, #1e293b, #0f172a);
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-bg: rgba(30, 41, 59, 0.8);
             --glass-border: rgba(255, 255, 255, 0.1);
             --accent: #6366f1;
             --accent-hover: #4f46e5;
@@ -23,6 +23,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -37,237 +38,177 @@
             padding: 20px;
         }
 
-        /* Top Navigation Actions */
-        .header-action {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-        }
-
-        .header-roadmap {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-
-        @media (max-width: 768px) {
-            .header-action, .header-roadmap {
-                position: relative;
-                top: 0;
-                left: 0;
-                right: 0;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                margin-bottom: 10px;
-            }
-            body {
-                flex-direction: column;
-                justify-content: flex-start;
-                padding-top: 40px;
-            }
-        }
-
-        .btn-shuffle, .btn-secondary {
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.85rem;
-            text-decoration: none;
-        }
-
-        .btn-shuffle {
-            background: var(--accent);
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-shuffle:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(8px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Main Card */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
+        /* Container grouping the card and the navigation below it */
+        .app-wrapper {
             width: 100%;
             max-width: 480px;
-            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Main Question Card */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 32px 24px;
             border-radius: 28px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s ease;
         }
 
-        @media (max-width: 480px) {
-            .card {
-                padding: 30px 24px;
-            }
-            h1 { font-size: 1.5rem !important; }
+        /* Navigation buttons positioned below the card */
+        .nav-container {
+            display: flex;
+            gap: 12px;
+            width: 100%;
         }
 
-        /* Stepper */
+        .btn-nav {
+            flex: 1;
+            padding: 14px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: 1px solid var(--glass-border);
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-shuffle { 
+            background: var(--accent); 
+            border: none;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
+        }
+        
+        .btn-roadmap { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(10px); 
+        }
+
+        .btn-nav:active { transform: scale(0.97); }
+
+        /* Question UI Elements */
         .stepper {
             display: flex;
             gap: 8px;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .step {
             height: 4px;
             flex: 1;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            transition: all 0.4s ease;
+            border-radius: 10px;
         }
 
-        .step.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+        .step.active { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
         .step.completed { background: var(--easy); }
 
         .topic-label {
             color: var(--accent);
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            font-size: 0.75rem;
             margin-bottom: 8px;
         }
 
         h1 {
-            font-size: 1.85rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            line-height: 1.2;
             margin-bottom: 12px;
-            line-height: 1.3;
         }
 
         .difficulty-tag {
-            display: inline-flex;
+            display: inline-block;
             padding: 4px 12px;
-            border-radius: 9999px;
+            border-radius: 20px;
             font-size: 0.7rem;
             font-weight: 700;
-            background: rgba(255, 255, 255, 0.05);
             margin-bottom: 32px;
+            background: rgba(0, 0, 0, 0.2);
         }
 
-        .diff-Easy { color: var(--easy); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .diff-Medium { color: var(--medium); border: 1px solid rgba(245, 158, 11, 0.3); }
-        .diff-Hard { color: var(--hard); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .diff-Easy { color: var(--easy); border: 1px solid var(--easy); }
+        .diff-Medium { color: var(--medium); border: 1px solid var(--medium); }
+        .diff-Hard { color: var(--hard); border: 1px solid var(--hard); }
 
-        .card-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            padding: 16px;
-            border-radius: 14px;
+        .btn-main {
+            width: 100%;
+            padding: 18px;
+            border-radius: 16px;
             font-weight: 600;
+            text-align: center;
             text-decoration: none;
-            text-align: center;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-        }
-
-        .btn-next {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 16px;
-            border-radius: 14px;
-            font-weight: 600;
+            font-size: 1rem;
+            border: none;
             cursor: pointer;
-            transition: all 0.2s;
+            display: block;
+            margin-bottom: 12px;
         }
 
-        .btn-next:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+        .btn-solve { background: var(--accent); color: white; }
+        .btn-next { background: rgba(255, 255, 255, 0.08); color: white; }
+        
+        .finish-view { text-align: center; display: none; }
 
-        /* Finish State */
-        .finish-state {
-            text-align: center;
-            display: none;
-            animation: fadeIn 0.5s ease;
+        @media (max-width: 480px) {
+            body { padding: 16px; }
+            .card { padding: 24px 20px; }
+            h1 { font-size: 1.4rem; }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .finish-state h2 { font-size: 1.5rem; margin-bottom: 12px; color: var(--easy); }
-        .finish-state p { color: var(--text-dim); margin-bottom: 24px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div class="header-action">
-        <button class="btn-shuffle" onclick="generateNewTopic()">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            Shuffle Topic
-        </button>
-    </div>
+    <div class="app-wrapper">
+        <div class="card">
+            <div id="questionView">
+                <div class="stepper">
+                    <div class="step" id="step0"></div>
+                    <div class="step" id="step1"></div>
+                    <div class="step" id="step2"></div>
+                </div>
 
-    <div class="header-roadmap">
-        <a href="https://neetcode.io/roadmap" target="_blank" class="btn-secondary">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L16 4m0 13V4m0 0L9 7"></path></svg>
-            Full Roadmap
-        </a>
-    </div>
+                <div class="topic-label" id="topicLabel">...</div>
+                <h1 id="questionTitle">Loading...</h1>
+                <div id="difficultyTag" class="difficulty-tag">Easy</div>
 
-    <div class="card" id="mainCard">
-        <div id="questionArea">
-            <div class="stepper">
-                <div class="step" id="step0"></div>
-                <div class="step" id="step1"></div>
-                <div class="step" id="step2"></div>
+                <div class="actions">
+                    <a href="#" id="lcLink" target="_blank" class="btn-main btn-solve">Solve on LeetCode</a>
+                    <button id="nextBtn" class="btn-main btn-next" onclick="handleNext()">Next Question</button>
+                </div>
             </div>
 
-            <div class="topic-label" id="topicLabel">Topic</div>
-            <h1 id="questionTitle">Loading Pattern...</h1>
-            <div id="difficultyTag" class="difficulty-tag">Easy</div>
-
-            <div class="card-actions">
-                <a href="#" id="lcLink" target="_blank" class="btn-primary">Solve on LeetCode</a>
-                <button id="nextBtn" class="btn-next" onclick="handleNext()">Next Question</button>
+            <div id="finishView" class="finish-view">
+                <div style="font-size: 3rem; margin-bottom: 10px;">🎯</div>
+                <h2 style="margin-bottom: 8px;">Session Done</h2>
+                <p style="color: var(--text-dim); margin-bottom: 24px;">You reviewed 3 problems in this pattern.</p>
+                <button class="btn-main btn-solve" onclick="generateNewTopic()">Start New Topic</button>
             </div>
         </div>
 
-        <div id="finishArea" class="finish-state">
-            <div style="font-size: 3rem; margin-bottom: 10px;">🎯</div>
-            <h2>Session Complete</h2>
-            <p>You've reviewed 3 problems in this pattern. Ready for another round?</p>
-            <button class="btn-primary" style="width: 100%; border: none;" onclick="generateNewTopic()">Try New Topic</button>
+        <div class="nav-container">
+            <button class="btn-nav btn-shuffle" onclick="generateNewTopic()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                Shuffle
+            </button>
+            <a href="https://neetcode.io/roadmap" target="_blank" class="btn-nav btn-roadmap">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L16 4m0 13V4m0 0L9 7"></path></svg>
+                Roadmap
+            </a>
         </div>
     </div>
 
     <script>
-        // ... (The neetCode150 array remains the same as your provided code)
         const neetCode150 = [
             { category: "Arrays & Hashing", name: "Contains Duplicate", diff: "Easy", link: "https://leetcode.com/problems/contains-duplicate/" },
             { category: "Arrays & Hashing", name: "Valid Anagram", diff: "Easy", link: "https://leetcode.com/problems/valid-anagram/" },
@@ -360,6 +301,7 @@
             { category: "Graphs", name: "Redundant Connection", diff: "Medium", link: "https://leetcode.com/problems/redundant-connection/" },
             { category: "Graphs", name: "Number of Connected Comp", diff: "Medium", link: "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/" },
             { category: "Graphs", name: "Graph Valid Tree", diff: "Medium", link: "https://leetcode.com/problems/graph-valid-tree/" },
+            { category: "Graphs", name: "Number of Connected Components in an Undirected Graph", diff: "Medium", link: "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/" },
             { category: "Graphs", name: "Word Ladder", diff: "Hard", link: "https://leetcode.com/problems/word-ladder/" },
             { category: "Advanced Graphs", name: "Reconstruct Itinerary", diff: "Hard", link: "https://leetcode.com/problems/reconstruct-itinerary/" },
             { category: "Advanced Graphs", name: "Min Cost to Connect Points", diff: "Medium", link: "https://leetcode.com/problems/min-cost-to-connect-all-points/" },
@@ -426,8 +368,8 @@
         window.onload = generateNewTopic;
 
         function generateNewTopic() {
-            document.getElementById('questionArea').style.display = 'block';
-            document.getElementById('finishArea').style.display = 'none';
+            document.getElementById('questionView').style.display = 'block';
+            document.getElementById('finishView').style.display = 'none';
 
             const categories = [...new Set(neetCode150.map(q => q.category))];
             const randomCat = categories[Math.floor(Math.random() * categories.length)];
@@ -441,7 +383,6 @@
 
         function updateSessionUI() {
             const q = sessionQuestions[sessionIndex];
-            
             document.getElementById('topicLabel').innerText = q.category;
             document.getElementById('questionTitle').innerText = q.name;
             document.getElementById('lcLink').href = q.link;
@@ -458,7 +399,7 @@
             }
 
             const nextBtn = document.getElementById('nextBtn');
-            nextBtn.innerText = (sessionIndex === 2) ? "Finish Session" : "Next Question";
+            nextBtn.innerText = (sessionIndex === 2) ? "Finish Review" : "Next Question";
         }
 
         function handleNext() {
@@ -466,8 +407,8 @@
                 sessionIndex++;
                 updateSessionUI();
             } else {
-                document.getElementById('questionArea').style.display = 'none';
-                document.getElementById('finishArea').style.display = 'block';
+                document.getElementById('questionView').style.display = 'none';
+                document.getElementById('finishView').style.display = 'block';
             }
         }
     </script>
